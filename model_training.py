@@ -1,3 +1,10 @@
+## Data set source: https://huggingface.co/datasets/odegiber/hate_speech18/tree/main
+## Data Fields
+# text: the provided sentence
+# user_id: information to make it possible to re-build the conversations these sentences belong to
+# subforum_id: information to make it possible to re-build the conversations these sentences belong to
+# num_contexts: number of previous posts the annotator had to read before making a decision over the category of the sentence
+# label: hate, noHate, relation (sentence in the post doesn't contain hate speech on their own, but combination of serveral sentences does) or idk/skip (sentences that are not written in English or that don't contain information as to be classified into hate or noHate)
 #%%
 from datasets import load_dataset
 from datasets import load_dataset
@@ -7,6 +14,12 @@ from sklearn.model_selection import train_test_split
 # Load the dataset
 dataset = load_dataset("odegiber/hate_speech18")
 
+# Filter the dataset to include only the first two classes
+def filter_classes(example):
+    return example["label"] in [0, 1]
+
+filtered_dataset = dataset.filter(filter_classes)
+#%%
 # Initialize the tokenizer
 tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
 
