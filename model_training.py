@@ -19,7 +19,7 @@ def filter_classes(example):
     return example["label"] in [0, 1]
 
 filtered_dataset = dataset.filter(filter_classes)
-#%%
+
 # Initialize the tokenizer
 tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
 
@@ -27,7 +27,7 @@ tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
 def tokenize_function(examples):
     return tokenizer(examples["text"], padding="max_length", truncation=True)
 
-tokenized_datasets = dataset.map(tokenize_function, batched=True)
+tokenized_datasets = filtered_dataset.map(tokenize_function, batched=True)
 
 # Split the dataset
 train_test = tokenized_datasets["train"].train_test_split(test_size=0.1)
